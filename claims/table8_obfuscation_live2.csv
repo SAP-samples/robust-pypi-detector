@@ -1,0 +1,7 @@
+Obfuscation,Count
+basexx,40
+hex,6
+bytearray,1
+data_reordering,2
+xor,0
+api_obfuscation,1

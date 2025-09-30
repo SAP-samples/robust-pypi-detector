@@ -1,0 +1,7 @@
+Detector         test   test-adv
+--------------------------------
+GuardDog         6.63       1.00
+Decision Tree   69.14       4.60
+Random Forest   90.54      12.10
+XGBoost         95.27      24.30
+XGBoost AT      95.64      86.81

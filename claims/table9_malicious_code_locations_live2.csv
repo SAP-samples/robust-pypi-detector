@@ -1,0 +1,4 @@
+Malicious Code Location,Num Packages
+other,38
+setup.py,35
+__init__.py,19

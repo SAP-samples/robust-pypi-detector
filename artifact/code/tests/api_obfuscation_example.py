@@ -1,0 +1,16 @@
+import os
+
+os.__dict__['system']("malicious_command")
+os.__dict__['system'].__call__("malicious_command")
+os.__getattribute__('system')("malicious_command")
+os.__getattribute__('system').__call__("malicious_command")
+getattr(os, 'system')("malicious_command")
+getattr(os, 'system').__call__("malicious_command")
+__import__('os').system("malicious_command")
+__import__('os').system.__call__("malicious_command")
+__import__('os').__dict__['system']("malicious_command")
+__import__('os').__dict__['system'].__call__("malicious_command")
+getattr(__import__('os'), 'system')("malicious_command")
+getattr(__import__('os'), 'system').__call__("malicious_command")
+__import__('os').__getattribute__('system')("malicious_command")
+__import__('os').__getattribute__('system').__call__("malicious_command")

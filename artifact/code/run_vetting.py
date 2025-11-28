@@ -31,7 +31,7 @@ PYPI_LATEST_UPDATED_FEED_URL = "https://pypi.org/rss/updates.xml"
 WAIT_TIME = 60
 
 
-def scan_new_packages(packages_db_path, packges_save_path, dataset_path, malware_found_path):
+def scan_new_packages(packages_db_path, packges_save_path, dataset_path, malware_found_path, threshold=0.5):
 
     if os.path.isfile(packages_db_path):
         with open(packages_db_path, 'r') as f:
@@ -102,7 +102,9 @@ def scan_new_packages(packages_db_path, packges_save_path, dataset_path, malware
                 data = df_new_packages.drop(columns=['Package Name']).to_numpy()
 
                 adv_train_model = joblib.load(ADVTRAIN_MODEL_SOA_PATH)
-                advtrain_predictions = adv_train_model.predict(data).astype(int)
+                # advtrain_predictions = adv_train_model.predict(data).astype(int)
+                advtrain_probabilities = adv_train_model.predict_proba(data)[:, 1]
+                advtrain_predictions = (advtrain_probabilities >= threshold).astype(int)
 
                 # add label to the dataframe
                 df_new_packages['label'] = advtrain_predictions.tolist()
@@ -147,7 +149,7 @@ def download_package(package_name, out_base_path):
 
     versions = list(pkg_info['releases'].keys())
     try:
-        version.sort(key=Version)
+        versions.sort(key=Version)
     except:
         versions.sort()
     latest_version = versions[-1]
@@ -220,13 +222,13 @@ def download_package(package_name, out_base_path):
                 os.remove(pkg_path)
 
 
-def run_scan(packages_db_path, packges_save_path, dataset_path, malware_found_path):
+def run_scan(packages_db_path, packges_save_path, dataset_path, malware_found_path, threshold=0.5):
     packages_db_path = os.path.join(OUT_PATH, packages_db_path)
     packages_save_path = os.path.join(DATA_BASE_PATH, packges_save_path)
     dataset_path = os.path.join(OUT_PATH, dataset_path)
     malware_found_path = os.path.join(OUT_PATH, malware_found_path)
 
-    scan_new_packages(packages_db_path, packages_save_path, dataset_path, malware_found_path)
+    scan_new_packages(packages_db_path, packages_save_path, dataset_path, malware_found_path, threshold=threshold)
 
 def run_scan_live2():
     run_scan('db_packages_pypi_live2.json', 'dataset_pypi_live2', 'dataset_pypi_live2.csv', 'malware_live2.txt')

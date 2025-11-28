@@ -472,9 +472,6 @@ def extract_features_sample(package, label):
 
 
 class FeatureExtractor:
-    def __init__(self) -> None:
-        nltk.download('stopwords', quiet=True)
-
     def extract_features(self, packages, label, n_jobs=None):
 
         assert n_jobs is None or (isinstance(n_jobs, int) and n_jobs > 0)

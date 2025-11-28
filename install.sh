@@ -4,3 +4,4 @@ source advpkg_env/bin/activate
 
 # Install required packages
 python -m pip install -r requirements.txt
+python -c "import nltk;nltk.download('stopwords')"

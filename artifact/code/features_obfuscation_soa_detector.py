@@ -140,27 +140,29 @@ def detect_string_obfuscation_xor(package):
 
 def detect_api_obfuscation(package_files):
     obfuscations_patterns = []
-    for select_module in ["__import__\('\w+'\)\."]:  # ["\w+.", "__import__('\w+')."]:
-        for select_func in ["\w+", "__dict__\['\w+'\]", "__getattribute__\('\w+'\)"]:
-            for call_func in ["\(", "\.__call__\("]:
+    for select_module in [r"\w+\.", r"__import__\('\w+'\)\."]:
+        for select_func in [r"(?!__)\w+", r"__dict__\['\w+'\]", r"__getattribute__\('\w+'\)"]:
+            for call_func in [r"\(", r"\.__call__\("]:
+                if select_module == r"\w+\." and select_func == r"\w+" and call_func == r"\(":
+                    continue  # skip the non-obfuscated pattern
                 obfuscations_patterns.append(f"{select_module}{select_func}{call_func}")
     # obfuscations_patterns = [f"{select_module}{select_func}{call_func}" for select_module in ["\w+.", "__import__('\w+')."] for select_func in ["\w+", "__dict__['\w+']", "__getattribute__('\w+')"] for call_func in ["(", ".__call__("]]
 
-    for select_module in ["\w+", "__import__\('\w+'\)"]:
-        for call_func in ["\(", "\.__call__\("]:
-            obfuscations_patterns.append("getattr\({module}, '{func_fmt_name}'\){call}".format(module=select_module, func_fmt_name="\w+", call=call_func))
+    for select_module in [r"\w+", r"__import__\('\w+'\)"]:
+        for call_func in [r"\(", r"\.__call__\("]:
+            obfuscations_patterns.append(r"getattr\({module}, '{func_fmt_name}'\){call}".format(module=select_module, func_fmt_name=r"\w+", call=call_func))
     # obfuscations_patterns += ["getattr(\w+, '{func_fmt_name}'){call}".format(module=select_module, func_fmt_name="\w+", call=call_func) for select_module in ["\w+", "__import__('\w+')"] for call_func in ["(", ".__call__("]]
 
     # handle here other obfuscation patterns related to eval() and exec()
-    for select_builtins in ["\['__builtins__'\]", ".get\('builtins'\)"]:
-        for select_func in ["\w+", "__dict__\['\w+'\]", "__getattribute__\('\w+'\)"]:
-            for call_func in ["\(", "\.__call__\("]:
+    for select_builtins in [r"\['__builtins__'\]", r".get\('builtins'\)"]:
+        for select_func in [r"\w+", r"__dict__\['\w+'\]", r"__getattribute__\('\w+'\)"]:
+            for call_func in [r"\(", r"\.__call__\("]:
                 obfuscations_patterns.append(f"globals(){select_builtins}.{select_func}{call_func}")
 
-    for select_builtins in ["\['__builtins__'\]", "\.get\('builtins'\)"]:
-        for call_func in ["\(", "\.__call__\("]:
-            obfuscations_patterns.append("getattr\(globals\(\){builtins}, '{func_fmt_name}'\){call}".format(builtins=select_builtins, func_fmt_name="\w+", call=call_func))
-    
+    for select_builtins in [r"\['__builtins__'\]", r".get\('builtins'\)"]:
+        for call_func in [r"\(", r"\.__call__\("]:
+            obfuscations_patterns.append(r"getattr\(globals\(\){builtins}, '{func_fmt_name}'\){call}".format(builtins=select_builtins, func_fmt_name=r"\w+", call=call_func))
+
     # detection_patterns = []
     # api_list = [SENSITIVE_API_NETWORK, SENSITIVE_API_FILESYSTEM, SENSITIVE_API_HOSTINFO, SENSITIVE_API_CMD_EXEC, SENSITIVE_API_ENCODING, SENSITIVE_API_CODE_EXEC]
     # for api_patterns in api_list:

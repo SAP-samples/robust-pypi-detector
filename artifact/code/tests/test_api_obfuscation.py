@@ -5,7 +5,7 @@ import os
 
 
 def test_detect_api_obfuscation():
-    res = detect_api_obfuscation([os.path.join(os.path.dirname(__file__), "api_obf_example.py")])
+    res = detect_api_obfuscation([os.path.join(os.path.dirname(__file__), "api_obfuscation_example.py")])
     assert res == 14, f"Expected 14 obfuscated API calls, but got {res}"
 
 

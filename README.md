@@ -1,4 +1,5 @@
 # One Detector Fits All: Robust and Adaptive Detection of Malicious Packages from PyPI to Enterprises (ACSAC '25)
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/robust-pypi-detector)](https://api.reuse.software/info/github.com/SAP-samples/robust-pypi-detector)
 
 This repository contains the materials related to the paper _One Detector Fits All: Robust and Adaptive Detection of Malicious Packages from PyPI to Enterprises_ accepted
 at the [41st Annual Computer Security Applications Conference (ACSAC) (ACSAC '25)](https://www.acsac.org/2025/).  
